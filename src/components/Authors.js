@@ -10,7 +10,6 @@ const Authors = ({ setError }) => {
   }
 
   const authors = data.allAuthors
-
   return (
     <div>
       <h2>authors</h2>
