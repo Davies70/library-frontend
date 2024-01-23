@@ -5,14 +5,16 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import Notify from './components/Notify'
 import { useState } from 'react'
 import LoginForm from './components/LoginForm'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useQuery } from '@apollo/client'
 import Recommendations from './components/Recommendations'
+import { USER } from './queries'
 
 const App = () => {
   const navigate = useNavigate()
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [token, setToken] = useState(null)
+  const { data, error, loading } = useQuery(USER)
 
   const client = useApolloClient()
 
@@ -28,6 +30,10 @@ const App = () => {
     localStorage.clear()
     client.resetStore()
     navigate('/login')
+  }
+
+  if (loading) {
+    return <div>loading</div>
   }
 
   return (
@@ -52,14 +58,17 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Authors setError={notify} />} />
         <Route path='/books' element={<Books />} />
-        <Route path='/newbook' element={<NewBook />} />
+        <Route path='/newbook' element={<NewBook user={data.me} />} />
         <Route
           path='/login'
           element={
             <LoginForm setToken={setToken} setErrorMessage={setErrorMessage} />
           }
         />
-        <Route path='/recommendations' element={<Recommendations />} />
+        <Route
+          path='/recommendations'
+          element={<Recommendations user={data.me} />}
+        />
       </Routes>
     </div>
   )

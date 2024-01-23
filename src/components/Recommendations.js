@@ -1,33 +1,47 @@
-import { useQuery } from '@apollo/client'
-import { USER } from '../queries'
-import { useState, useEffect } from 'react'
+import { useQuery, useLazyQuery } from '@apollo/client'
+import React, { useEffect } from 'react'
+import { ALL_BOOKS } from '../queries'
 
-const Recommendations = () => {
-  const [user, setUser] = useState(null)
-  const { loading, data } = useQuery(USER)
+const Recommendations = ({ user }) => {
+  // const [getBooks, { loading: booksLoading, data: booksData }] =
+  //   useLazyQuery(ALL_BOOKS)
 
-  useEffect(() => {
-    if (data) {
-      setUser(data.me)
-    }
-  }, [data])
+  // useEffect(() => {
+  //   if (user) {
+  //     getBooks({ variables: { genre: user.favoriteGenre } })
+  //   }
+  // }, [user, getBooks])
 
-  if (loading) {
+  const { data: booksData, loading: booksLoading } = useQuery(ALL_BOOKS, {
+    variables: {
+      genre: user.favoriteGenre,
+    },
+  })
+
+  if (booksLoading) {
     return <div>loading</div>
   }
 
   return (
     <div>
       <h2>recommendations</h2>
-      <span>books in your favorite genre</span>
+      <span>
+        books in your favorite genre <b>{user.favoriteGenre}</b>
+      </span>
       <table>
         <tbody>
-          <thead>
-            <tr>
-              <td>author</td>
-              <td>published</td>
+          <tr>
+            <th></th>
+            <th>author</th>
+            <th>published</th>
+          </tr>
+          {booksData?.allBooks.map((book) => (
+            <tr key={book.id}>
+              <td>{book.title}</td>
+              <td>{book.author.name}</td>
+              <td>{book.published}</td>
             </tr>
-          </thead>
+          ))}
         </tbody>
       </table>
     </div>
