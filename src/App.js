@@ -3,15 +3,17 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import Notify from './components/Notify'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import LoginForm from './components/LoginForm'
 import { useApolloClient } from '@apollo/client'
+import Recommendations from './components/Recommendations'
 
 const App = () => {
   const navigate = useNavigate()
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [token, setToken] = useState(null)
+
   const client = useApolloClient()
 
   const notify = (message) => {
@@ -37,6 +39,9 @@ const App = () => {
         {token ? (
           <>
             <button onClick={() => navigate('/newbook')}>add book</button>
+            <button onClick={() => navigate('/recommendations')}>
+              recommend
+            </button>
             <button onClick={logout}>logout</button>
           </>
         ) : (
@@ -54,6 +59,7 @@ const App = () => {
             <LoginForm setToken={setToken} setErrorMessage={setErrorMessage} />
           }
         />
+        <Route path='/recommendations' element={<Recommendations />} />
       </Routes>
     </div>
   )

@@ -3,22 +3,15 @@ import React, { useState, useEffect } from 'react'
 import { UPDATE_AUTHOR } from '../queries'
 
 const AuthorForm = ({ setError, authors }) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState(authors[0].name)
   const [born, setBorn] = useState('')
-  const [updateAuthor, result] = useMutation(UPDATE_AUTHOR)
+  const [updateAuthor] = useMutation(UPDATE_AUTHOR)
 
   const update = (event) => {
     event.preventDefault()
     updateAuthor({ variables: { name, born } })
-    setName('')
     setBorn('')
   }
-
-  useEffect(() => {
-    if (result.data && result.data.editAuthor === null) {
-      setError('author not found')
-    }
-  }, [result.data])
 
   return (
     <div>

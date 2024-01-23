@@ -2,8 +2,9 @@ import { useMutation } from '@apollo/client'
 import { useState, useEffect } from 'react'
 import { LOGIN } from '../queries'
 import { useNavigate } from 'react-router-dom'
+import { ApolloClient } from '@apollo/client'
 
-const LoginForm = ({ setToken, setErrorMessage }) => {
+const LoginForm = ({ setToken, setErrorMessage, setUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ const LoginForm = ({ setToken, setErrorMessage }) => {
       setErrorMessage(error.graphQLErrors[0].message)
     },
   })
-
+  
   useEffect(() => {
     if (result.data) {
       const token = result.data.login.value
@@ -26,6 +27,7 @@ const LoginForm = ({ setToken, setErrorMessage }) => {
   const submit = (event) => {
     event.preventDefault()
     login({ variables: { username, password } })
+
     setPassword('')
     setUsername('')
   }
