@@ -1,17 +1,31 @@
-import React from 'react'
+import { useQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
+import { useEffect, useState } from 'react'
 
-const Filter = ({ books, setFilteredBooks }) => {
+const Filter = ({  setFilteredBooks }) => {
+  const [filterKey, setFilterKey] = useState(null)
+  const { data, loading, error } = useQuery(ALL_BOOKS, {
+    variables: {
+      genre: filterKey,
+    },
+  })
+
+  useEffect(() => {
+    if (data) {
+      setFilteredBooks(data.allBooks)
+    }
+  }, [data])
+
+  if (loading) {
+    return <div>loading...</div>
+  }
+
   const filter = ({ target }) => {
     if (target.innerText === 'all genres') {
-      setFilteredBooks(books)
+      setFilterKey(null)
       return
     }
-    const filteredBooks = books.filter((b) => {
-      if (b.genres.includes(target.innerText)) {
-        return b
-      }
-    })
-    setFilteredBooks(filteredBooks)
+    setFilterKey(target.innerText)
   }
   return (
     <div>

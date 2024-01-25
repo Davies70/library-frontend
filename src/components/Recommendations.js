@@ -3,15 +3,6 @@ import React, { useEffect } from 'react'
 import { ALL_BOOKS } from '../queries'
 
 const Recommendations = ({ user }) => {
-  // const [getBooks, { loading: booksLoading, data: booksData }] =
-  //   useLazyQuery(ALL_BOOKS)
-
-  // useEffect(() => {
-  //   if (user) {
-  //     getBooks({ variables: { genre: user.favoriteGenre } })
-  //   }
-  // }, [user, getBooks])
-
   const { data: booksData, loading: booksLoading } = useQuery(ALL_BOOKS, {
     variables: {
       genre: user.favoriteGenre,

@@ -5,12 +5,12 @@ import { useEffect, useState } from 'react'
 
 const Books = () => {
   const { loading, data } = useQuery(ALL_BOOKS)
-  const [books, setBooks] = useState([])
+  // const [books, setBooks] = useState([])
   const [filteredBooks, setFilteredBooks] = useState([])
 
   useEffect(() => {
     if (data) {
-      setBooks(data.allBooks)
+      // setBooks(data.allBooks)
       setFilteredBooks(data.allBooks)
     }
   }, [data])
@@ -37,11 +37,7 @@ const Books = () => {
           ))}
         </tbody>
       </table>
-      <Filter
-        setBooks={setBooks}
-        books={books}
-        setFilteredBooks={setFilteredBooks}
-      />
+      <Filter setFilteredBooks={setFilteredBooks} />
     </div>
   )
 }

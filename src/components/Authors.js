@@ -1,5 +1,5 @@
-import { useQuery, useMutation } from '@apollo/client'
-import { ALL_AUTHORS, UPDATE_AUTHOR } from '../queries'
+import { useQuery } from '@apollo/client'
+import { ALL_AUTHORS } from '../queries'
 import AuthorForm from './AuthorForm'
 
 const Authors = ({ setError }) => {

@@ -29,12 +29,13 @@ import {
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
+  split,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 
-const httpLink = createHttpLink({
-  uri: 'http://localhost:4000',
-})
+import { getMainDefinition } from '@apollo/client/utilities'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { createClient } from 'graphql-ws'
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -48,8 +49,26 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+const httpLink = createHttpLink({
+  uri: 'http://localhost:4000',
+})
+
+const wsLink = new GraphQLWsLink(createClient({ url: 'ws://localhost:4000' }))
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  authLink.concat(httpLink)
+)
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: splitLink,
   cache: new InMemoryCache(),
 })
 

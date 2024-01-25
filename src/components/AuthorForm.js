@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { UPDATE_AUTHOR } from '../queries'
 
 const AuthorForm = ({ setError, authors }) => {

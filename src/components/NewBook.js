@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
 import { useMutation } from '@apollo/client'
+import { updateCache } from '../App'
 
-const NewBook = ({ user }) => {
+const NewBook = ({ user, notify }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
@@ -20,13 +21,16 @@ const NewBook = ({ user }) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    createBook({ variables: { title, author, published, genres } })
-
-    setTitle('')
-    setPublished('')
-    setAuthor('')
-    setGenres([])
-    setGenre('')
+    try {
+      await createBook({ variables: { title, author, published, genres } })
+      setTitle('')
+      setPublished('')
+      setAuthor('')
+      setGenres([])
+      setGenre('')
+    } catch (e) {
+      notify(e.message)
+    }
   }
 
   const addGenre = () => {
